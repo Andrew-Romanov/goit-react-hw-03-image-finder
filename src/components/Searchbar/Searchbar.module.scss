@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   top: 30px;
-  // z-index: 1100;
+  z-index: 1;
   width: 740px;
   // width: 480px;
   border-radius: 5px;
@@ -62,7 +62,6 @@
     display: inline-block;
     width: 100%;
     font: inherit;
-    // font-size: 20px;
     border: none;
     outline: none;
     padding-left: 4px;
@@ -71,14 +70,6 @@
     &::placeholder {
       font: inherit;
       opacity: 0.5;
-      // font-size: 18px;
     }
   }
-
-  // &__Title {
-  //   font-size: 24px;
-  //   font-weight: 600;
-  //   margin-bottom: 23px;
-  //   color: white;
-  // }
 }

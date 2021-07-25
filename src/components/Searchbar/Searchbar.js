@@ -12,21 +12,22 @@ class Searchbar extends Component {
   };
 
   state = {
-    userInput: '',
+    searchQuery: '',
   };
 
   handleChange = event => {
-    this.setState({ userInput: event.target.value });
+    this.setState({ searchQuery: event.target.value });
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    this.props.whenSubmit(this.state);
+    if (this.state.searchQuery.trim() === '') return;
+    this.props.whenSubmit(this.state.searchQuery.trim());
     this.formReset();
   };
 
   formReset = () => {
-    this.setState({ userInput: '' });
+    this.setState({ searchQuery: '' });
   };
 
   render() {
@@ -44,7 +45,7 @@ class Searchbar extends Component {
               autoComplete="off"
               autoFocus
               placeholder="Search images and photos"
-              value={this.state.userInput}
+              value={this.state.searchQuery}
               onChange={this.handleChange}
             />
           </form>

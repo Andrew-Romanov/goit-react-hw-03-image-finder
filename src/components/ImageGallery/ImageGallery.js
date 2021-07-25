@@ -1,6 +1,5 @@
 import { Component } from 'react';
-// import axios from 'axios';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import ImageGalleryItem from '../ImageGalleryItem';
 import Button from '../Button';
 import Modal from '../Modal';
@@ -9,19 +8,20 @@ import apiService from '../../utils/apiService';
 import styles from './ImageGallery.module.scss';
 
 class ImageGallery extends Component {
-  // static propTypes = {
-  //   whenSubmit: PropTypes.func,
-  // };
+  static propTypes = {
+    searchQuery: PropTypes.string,
+  };
 
-  // static defaultProps = {
-  //   whenSubmit: () => {},
-  // };
+  static defaultProps = {
+    searchQuery: '',
+  };
 
   state = {
     pictures: [],
     pageNumber: 1,
     isLoading: false,
     isModalOpen: false,
+    needToScroll: false,
   };
 
   modalData = {
@@ -30,40 +30,37 @@ class ImageGallery extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    // console.log('componentDidUpdate');
-    // console.log(this.props.searchQuery);
-    // console.log(`https://pixabay.com/api/?image_type=photo&orientation=horizontal&q=${this.props.searchQuery}&page=${this.state.pageNumber}&per_page=12&key=9331698-e17fc555dd577ca52fdf34a8b`);
-
-    // if ((prevProps.searchQuery !== this.props.searchQuery)
-    //   || (prevState.pageNumber !== this.state.pageNumber)) {
     if (prevProps.searchQuery !== this.props.searchQuery) {
       this.setState({ pictures: [], pageNumber: 1 });
       this.fetchImages();
-      // console.log('Fetch 1');
     } else if (prevState.pageNumber < this.state.pageNumber) {
       this.fetchImages();
-      // console.log('Fetch 2');
     }
 
+    if (this.state.needToScroll) {
+      this.scrollToBottom();
+      this.setState({ needToScroll: false });
+    }
+  }
+
+  scrollToBottom = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
       behavior: 'smooth',
     });
-    // if (this.props.searchQuery === '') return;
-  }
+  };
 
   fetchImages = () => {
     this.setState({ isLoading: true });
 
+    // Оставил небольшой таймаут чтоб виден был лоадер
     setTimeout(() => {
-      // axios
-      //   .get(`https://pixabay.com/api/?image_type=photo&orientation=horizontal&q=${this.props.searchQuery}&page=${this.state.pageNumber}&per_page=12&key=9331698-e17fc555dd577ca52fdf34a8b`)
       apiService(this.props.searchQuery, this.state.pageNumber)
         .then(response => {
           response.data.hits.length !== 0
-            ? // ? this.setState({ pictures: response.data.hits })
-              this.setState(prevState => ({
+            ? this.setState(prevState => ({
                 pictures: [...prevState.pictures, ...response.data.hits],
+                needToScroll: true,
               }))
             : console.log('No images found');
         })
@@ -74,20 +71,6 @@ class ImageGallery extends Component {
         .finally(() => this.setState({ isLoading: false }));
     }, 500);
   };
-
-  // handleChange = event => {
-  //   this.setState({ userInput: event.target.value });
-  // };
-
-  // handleSubmit = event => {
-  //   event.preventDefault();
-  //   this.props.whenSubmit(this.state);
-  //   this.formReset();
-  // };
-
-  // formReset = () => {
-  //   this.setState({ userInput: '' });
-  // };
 
   loadMoreImages = () => {
     this.setState(({ pageNumber }) => ({ pageNumber: pageNumber + 1 }));

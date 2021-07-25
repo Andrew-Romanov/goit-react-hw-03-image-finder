@@ -1,18 +1,20 @@
 import { Component } from 'react';
 import { createPortal } from 'react-dom';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import styles from './Modal.module.scss';
 
 const modalRoot = document.querySelector('#modal-root');
 
 class Modal extends Component {
-  // static propTypes = {
-  //   children: PropTypes.node,
-  // };
+  static propTypes = {
+    src: PropTypes.string.isRequired,
+    alt: PropTypes.string,
+    closeModal: PropTypes.func.isRequired,
+  };
 
-  // static defaultProps = {
-  //   children: <></>,
-  // };
+  static defaultProps = {
+    alt: 'Picture without tags',
+  };
 
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeydowm);
